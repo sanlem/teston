@@ -105,9 +105,10 @@ STATIC_URL = '/static/'
 STATIC_ROOT = 'static' # can be problem
 CRISPY_TEMPLATE_PACK = 'bootstrap3'
 
-# can be problem
-"""
+
 STATICFILES_DIRS = (
-    os.path.join(BASE_DIR, 'static'),
+    os.path.join(BASE_DIR, 'pols/static'),
+    
 )
-"""
+
+
