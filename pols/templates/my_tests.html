@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+{% if not tests %}
+<div class="row">
+  <div class="col-xs-2"></div>
+  <div class="col-xs-2">
+    <p class="text-info">No tests</p>
+  </div>
+</div>
+
+{% else %}
+<div class="row">
+  <div class="col-xs-2"></div>
+  <div class="col-xs-8">
+    <table class="table table-stripped table-hover">
+      <caption>Мої тести</caption>
+      <tr>
+        <td>№</td>
+        <td>Назва</td>
+        <td>Пароль</td>
+        <td>Розвязки</td>
+      </tr>
+      {% for test in tests %}
+      <tr>
+        <td>{{ forloop.counter }}</td>
+        <td>{{ test.title }}</td>
+        <td>{{ test.password }}</td>
+        <td><a href="{% url "home" %}sollutions/{{ test.password }}">Розвязки</a></td>
+      </tr>
+      {% endfor %}
+    </table>
+  </div>
+  <div class="col-xs-2"></div>
+</div>
+
+{% endif%}
+
+<div class="col-xs-4"></div>
+  <div class="form-container col-xs-4">
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h3 class="panel-title">Створити тест</h3>
+      </div>
+
+      <div class="panel-body">
+        <form action="{% url "create" %}" method="post" enctype="multipart/form-data" name="connect_form" role="form" class="form-horizontal">
+            {% csrf_token %}
+            <div>
+				      <label for="number">Кількість питань, не більше 20</label>
+				      <input class="form-control" type="number" min="1" max="20" value="" name="questions_amount" id="questions_amount" />
+              <span class="help-block">{% if error %} {{ error }} {% endif %}</span>
+
+			     </div>
+            <div>
+              <button type="submit" name="add_button" class="btn btn-primary btn-block">Створити</button>
+            </div>
+            </form>
+          </div>
+       </div>
+ </div>
+</div>
+<div class="col-xs-4"></div>
+
+
+{% endblock content %}

@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="col-xs-4"></div>
+  <div class="form-container col-xs-4">
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h3 class="panel-title">{{ poll.title }}</h3>
+      </div>
+
+      <div class="panel-body">
+        <form action="{% url "submit" %}" method="post" enctype="multipart/form-data" name="connect_form" role="form"class="form-horizontal">
+            {% csrf_token %}
+            <div>
+				<label for="submitter">Ім'я відправника *</label>
+				<input class="form-control" type="text" value="{{ request.user.get_full_name }}" name="submitter" id="submitter" />
+                <span class="help-block">{{ errors.title }}</span>
+
+                <label for="group">Група</label>
+                <input class="form-control" type="text" value="" name="group" id="group" />
+                <span class="help-block"></span>
+                <hr>
+			</div>
+
+			{% for question in questions %}
+			
+			<ul class="list-group">
+				<li class="list-group-item">Питання {{ question.number }}: {{ question.title }}</li>
+				<li class="list-group-item">1) {{ question.variant_1 }}</li>
+				<li class="list-group-item">2) {{ question.variant_2 }}</li>
+				<li class="list-group-item">3) {{ question.variant_3 }}</li>
+				<li class="list-group-item">4) {{ question.variant_4 }}</li>
+			</ul>
+
+			<div>
+				<label for="answer{{ question.number }}">Відповідь на питання {{ question.number }}</label>
+				<input class="form-control" type="number" min="1" max="4" value="" name="answer{{ question.number }}" id="answer{{ question.number }}" />
+        		<span class="help-block"></span>
+			</div>
+
+			<hr></hr>
+
+			{% endfor %}
+
+            <div>
+              <button type="submit" name="submit_button" class="btn btn-primary btn-block">Відповісти</button>
+            </div>
+            <input type="hidden" value="{{ poll.password }}" name="test_pwr" id="test_pwr">
+            </form>
+          </div>
+       </div>
+ </div>
+</div>
+<div class="col-xs-4"></div>
+
+{% endblock content %}

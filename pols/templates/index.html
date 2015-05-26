@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="container">
+	<div class="jumbotron">
+		<h1>TestOn!</h1>
+		<p>Платформа для простого створення тестів.</p>
+	</div>
+</div>
+
+<div class="rowjkhkjh">
+  <div class="col-xs-4"></div>
+  <div class="form-container col-xs-4">
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h3 class="panel-title">Пройти тест</h3>
+      </div>
+
+      <div class="panel-body">
+        <form action="{% url "submit" %}" method="get" enctype="multipart/form-data" name="connect_form" role="form"class="form-horizontal">
+          <div class="form-group">
+            <h4>Введіть пароль</h4>
+            <input class="form-control" type="text" value="" name="test_pwr" id="test_pwr">
+            <div>
+              <button type="submit" name="connect_button" class="btn btn-primary btn-block">Пройти тест</button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+  <div class="col-xs-4"></div>
+</div>
+
+{% endblock content %}

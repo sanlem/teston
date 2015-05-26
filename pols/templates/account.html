@@ -1,0 +1,81 @@
+{% extends "base.html" %}
+
+{% block extra_css %}
+
+<link rel="stylesheet" type="text/css" href="static/css/register.css">
+
+{% endblock extra_css %}
+
+{% block content %}
+
+{% if message %}
+<div class="alert alert-success" role="alert">{{ message }}</div>
+{% endif %}
+
+<div class="col-xs-4"></div>
+
+<div class="col-xs-4">
+<div class="panel panel-default">
+      <div class="panel-heading">
+        <h3 class="panel-title">Зміна даних</h3>
+      </div>
+    <div class="panel-body">
+		<form action="{% url "account" %}" method="post" enctype="multipart/form-data" name="connect_form" role="form"class="form-horizontal">
+            {% csrf_token %}
+            <div>
+				<label for="first_name">Ім'я</label>
+				<input class="form-control" type="text" value="{{ request.user.first_name }}" name="first_name" id="first_name" />
+				<span class="help-block"></span>
+			</div>
+            
+            <div>
+				<label for="last_name">Прізвище</label>
+				<input class="form-control" type="text" value="{{ request.user.last_name }}" name="last_name" id="last_name" />
+				<span class="help-block"></span>
+			</div>
+			
+            <div>
+              <button type="submit" name="changedata_button" class="btn btn-primary btn-block">Підтвердити</button>
+            </div>
+         </form>
+    </div>
+</div>
+
+<div class="panel panel-default">
+	<div class="panel-heading">
+        <h3 class="panel-title">Зміна паролю</h3>
+    </div>
+
+    <div class="panel-body">
+
+    <form action="{% url "account" %}" method="post" enctype="multipart/form-data" name="connect_form" role="form"class="form-horizontal">
+    		{% csrf_token %}
+			<div>
+				<label for="old_pwr">Старий пароль</label>
+				<input class="form-control" type="password" value="" name="old_pwr" id="old_pwr" />
+                <span class="help-block">{{ errors.old_pwr }}</span>
+			</div>
+
+			<div>
+				<label for="pwr1">Новий пароль</label>
+				<input class="form-control" type="password" value="" name="pwr1" id="pwr1" />
+                <span class="help-block">{{ errors.pwr1 }}</span>
+			</div>
+
+			<div>
+				<label for="pwr2">Повторіть пароль</label>
+				<input class="form-control" type="password" value="" name="pwr2" id="pwr2" />
+                 <span class="help-block">{{ errors.pwr2 }}</span>
+			</div>
+
+			<div>
+              <button type="submit" name="changepwr_button" class="btn btn-primary btn-block">Підтвердити</button>
+            </div>	
+    </form>
+    </div>	
+</div>
+</div>
+
+<div class="col-xs-4"></div>
+
+{% endblock content %}

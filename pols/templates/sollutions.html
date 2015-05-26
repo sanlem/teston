@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+
+{% block content%}
+
+{% if not sollutions %}
+
+<div class="row">
+  <div class="col-xs-2"></div>
+  <div class="col-xs-2">
+    <p class="text-info">No tests</p>
+  </div>
+</div>
+
+{% else %}
+
+<div class="row">
+  <div class="col-xs-2"></div>
+  <div class="col-xs-8">
+    <table class="table table-stripped table-hover">
+      <caption>Розвязки</caption>
+      <tr>
+        <td>№</td>
+        <td>Відправник</td>
+        <td>Оцінка</td>
+      </tr>
+      {% for sollution in sollutions %}
+      <tr>
+        <td>{{ forloop.counter }}</td>
+        <td>{{ sollution.submitter }}</td>
+        <td>{{ sollution.mark }}</td>
+      </tr>
+      {% endfor %}
+    </table>
+  </div>
+  <div class="col-xs-2"></div>
+</div>
+
+{% endif %}
+
+{% endblock content%}

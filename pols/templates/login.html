@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+
+{% block extra_css %}
+
+<link rel="stylesheet" type="text/css" href="static/css/register.css">
+
+{% endblock extra_css %}
+
+{% block content %}
+
+<div class="col-xs-4"></div>
+  <div class="form-container col-xs-4">
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h3 class="panel-title">Залогінитися</h3>
+      </div>
+
+      <div class="panel-body">
+        <form action="{% url "login" %}" method="post" enctype="multipart/form-data" name="connect_form" role="form"class="form-horizontal">
+            {% csrf_token %}
+            <div>
+				      <label for="first_name">Логін</label>
+				      <input class="form-control" type="text" value="{{ data.username }}" name="username" id="username" />
+            </div>
+
+			       <div>
+				      <label for="pwr1">Пароль</label>
+				      <input class="form-control" type="password" value="" name="pwr" id="pwr" />
+			       </div>
+
+            <div>
+              <button type="submit" name="login_button" class="btn btn-primary btn-block">Увійти</button>
+              <p class="form-text">{{ error }}</p>
+            </div>
+           
+          </div>
+       </div>
+ </div>
+</div>
+<div class="col-xs-4"></div>
+
+{% endblock content %}

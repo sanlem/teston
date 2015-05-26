@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="col-xs-4"></div>
+  <div class="form-container col-xs-4">
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h3 class="panel-title">Створення тесту</h3>
+      </div>
+
+      <div class="panel-body">
+        <form action="{% url "create" %}" method="post" enctype="multipart/form-data" name="connect_form" role="form"class="form-horizontal">
+            {% csrf_token %}
+            <div>
+				        <label for="Title">Назва тесту</label>
+				        <input class="form-control" type="text" value="" name="title" id="title" />
+                <span class="help-block">{{ errors.title }}</span>
+                
+                <label for="description">Опис</label>
+                <textarea class="form-control" value="" name="description" id="description"></textarea>
+                <span class="help-block"></span>
+                <hr>
+			         </div>
+
+			{% for num in number %}
+			
+			<div>
+				<label for="Title">Питання {{ num }}</label>
+				<input class="form-control" type="text" value="" name="question{{num}}" id="question{{num}}" />
+              <span class="help-block"></span>
+			</div>
+
+			{% for answer in answers %}
+			
+			<div>
+				<label for="Title">Відповідь {{ answer }}</label>
+				<input class="form-control" type="text" value="" name="answer{{ num }}_{{ answer }}" id="answer{{ num }}_{{ answer }}" />
+              <span class="help-block"></span>
+			</div>
+      
+      {% endfor %}
+
+			<div>
+				<label for="Title">Правильна відповідь на питання {{ num }}</label>
+				<input class="form-control" type="number" min="1" max="4" value="" name="correct{{ num }}" id="correct{{ num }}" />
+        <span class="help-block"></span>
+        <input type="hidden" name="number{{ num }}" value="{{ num }}" />
+			</div>
+
+			<hr></hr>
+
+			{% endfor %}
+
+            <div>
+              <button type="submit" name="create_button" class="btn btn-primary btn-block">Створити</button>
+            </div>
+            <input type="hidden" name="questions_amount" value="{{ questions_amount }}" />
+            </form>
+          </div>
+       </div>
+ </div>
+</div>
+<div class="col-xs-4"></div>
+
+{% endblock content %}
