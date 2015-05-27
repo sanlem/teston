@@ -12,8 +12,7 @@ def home(request):
 	return render(request, "index.html", {"user": request.user})
 
 def register(request):
-    """if request.method == "GET":
-        data, errors = {}, {}"""
+    # registration
     if (request.method == "POST") and request.user.is_anonymous():
         if request.POST.get("register_button") is not None:
             data = {'username': request.POST.get('username'),
@@ -25,11 +24,7 @@ def register(request):
                 errors["username"] = "Enter a login"
             else:
                 data["username"] = username
-            
-            """if len(User.objects.filter(username=username)) != 1:
-                errors["username"] = "Such user already exists"
-            """
-
+            # if such user exists
             try:
                 User.objects.get(username = data['username'])
             except User.DoesNotExist:
@@ -69,6 +64,7 @@ def register(request):
     	return render(request, "registration/register.html", {})
 
 def login_user(request):
+    # logging in
     if request.user.is_anonymous() and request.method == "POST":
         username = request.POST.get("username")
         pwr = request.POST.get("pwr")
@@ -79,10 +75,9 @@ def login_user(request):
                 error = "Account is blocked"
         else:
             error = "Such user doesn't exist"
-
         if not error:
             login(request, user)
-            return HttpResponseRedirect("/")
+            return HttpResponseRedirect(reverse("home"))
         else:
             return render(request, "login.html", {'error': error})
     else:
@@ -90,6 +85,7 @@ def login_user(request):
 
 
 class LogoutView(View):
+    # just logging out
     def get(self, request):
         logout(request)
         return HttpResponseRedirect("/")
@@ -114,12 +110,13 @@ def change_data(request):
             if not user.check_password(request.POST.get("old_pwr")):
                 errors["old_pwr"] = "Wrong password"
                 return render(request, "account.html", {"errors": errors})
+            
+            # password's validation
 
             pwr1 = request.POST.get("pwr1")
 
             if " " in pwr1:
                 errors["pwr1"] = "Invalid password"
-
 
             pwr2 = request.POST.get("pwr2")
             
@@ -139,47 +136,55 @@ def change_data(request):
                 message = "Password changed"
             return render(request, "account.html", {"errors": errors, "message": message})
 
-
     elif request.method == "GET":
         if request.user.is_anonymous():
+            # anonymous users should not see this page
             return HttpResponseRedirect(reverse("home"))
         else:
             return render(request, "account.html", {})
 
 def my_tests(request):
     if request.user.is_authenticated() and request.method == "GET":
+        # showing authenticated user's polls
         polls = Poll.objects.filter(owner=request.user.username)
         return render(request, "my_tests.html", {"tests": polls})
     else:
         return HttpResponseRedirect(reverse("home"))
 
 def create(request):
+    def generate_password():
+        """ generates unique password for poll """
+        alphabet = list('abcdefghijklmnopqrstuvwxyz' + 'abcdefghijklmnopqrstuvwxyz'.upper())
+        pwr = ""
+        for i in range(6):
+            pwr = pwr + choice(alphabet)
+        return pwr
+
     if request.method == "POST":
         data, errors = {}, {}
         title = request.POST.get("title")
         
         questions_amount = int(request.POST.get("questions_amount"))
         if not title:
+            # user should enter a title
             errors["title"] = "You should enter a title"
             return render(request, "create.html", {"number": range(1, questions_amount + 1), 
             "answers": range(1, 5), "questions_amount": questions_amount, "errors": errors})
         else:
             data["title"] = title
             description = request.POST.get("description")
-
-            # password generation
-            alphabet = list('abcdefghijklmnopqrstuvwxyz' + 'abcdefghijklmnopqrstuvwxyz'.upper())
-            pwr = ""
-            for i in range(6):
-                pwr = pwr + choice(alphabet)
+            
+            # password generation, password should be unique
+            pwr = generate_password()
+            while len(Poll.objects.filter(password=pwr)) != 0:
+                pwr = generate_password()
+            # create and saving new poll
             poll = Poll(title=unicode(title), owner=unicode(request.user.username), questions_number=questions_amount,
                 description=unicode(description), password=pwr)
             poll.save()
-        # 
-
-        amount = int(request.POST.get("questions_amount"))
-
-        for i in range(1, amount + 1):
+  
+        # creating questions, attached to current poll
+        for i in range(1, questions_amount + 1):
             current_question = "question" + str(i)
             question = Question()
             question.title = unicode(request.POST.get(current_question))
@@ -203,7 +208,9 @@ def create(request):
 
 def submit(request):
     if request.method == "GET":
+        # if GET, than display the poll
     	try:
+    	    # if such poll exists
     	    current_poll = Poll.objects.get(password=request.GET.get("test_pwr"))
     	except Exception:
     	    return HttpResponseRedirect(reverse("home"))
@@ -211,6 +218,7 @@ def submit(request):
         return render(request, "test.html", {"questions": questions, "number": range(1, 
             current_poll.questions_number), "poll": current_poll})
     else:
+        # if POST, than check the answers and add a new sollution
         current_poll = Poll.objects.get(password=request.POST.get("test_pwr"))
         submitter = request.POST.get("submitter")
         group = request.POST.get("group")
@@ -219,14 +227,21 @@ def submit(request):
         questions = Question.objects.filter(poll=current_poll)
         for question in questions:
             answer = "answer" + str(question.number)
-            if int(request.POST.get(answer)) == question.correct:
-                points = points + 1
+            try:
+                users_answer = int(request.POST.get(answer))
+            except Exception:
+                # if user didn't answered, we should ignor this answer
+                pass
+            else:
+                if users_answer == question.correct:
+                    points = points + 1
         sollution = Sollution(poll=current_poll, submitter=submitter, mark=points, group=group)
         sollution.save()
 
         return HttpResponseRedirect(reverse("home"))
 
 def sollutions(request, pwr):
+    # display sollutions
     poll = Poll.objects.get(password=pwr)
     if poll and poll.owner == request.user.username:
         sollutions = Sollution.objects.filter(poll=poll)

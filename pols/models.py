@@ -37,5 +37,5 @@ class Sollution(models.Model):
     mark = models.IntegerField()
 
     def __unicode__(self):
-        title = unicode(self.submitter) + unicode(self.group)
+        title = unicode(self.submitter) + u" " + unicode(self.group)
         return title
