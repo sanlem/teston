@@ -107,7 +107,7 @@ CRISPY_TEMPLATE_PACK = 'bootstrap3'
 
 
 STATICFILES_DIRS = (
-    os.path.join(BASE_DIR, 'pols/static'),
+    os.path.join(BASE_DIR, 'teston/static'),
     
 )
 
