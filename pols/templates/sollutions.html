@@ -21,12 +21,14 @@
       <tr>
         <td>№</td>
         <td>Відправник</td>
+        <td>Група</td>
         <td>Оцінка</td>
       </tr>
       {% for sollution in sollutions %}
       <tr>
         <td>{{ forloop.counter }}</td>
         <td>{{ sollution.submitter }}</td>
+        <td>{{ sollution.group }}</td>
         <td>{{ sollution.mark }}</td>
       </tr>
       {% endfor %}
