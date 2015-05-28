@@ -88,7 +88,7 @@ class LogoutView(View):
     # just logging out
     def get(self, request):
         logout(request)
-        return HttpResponseRedirect("/")
+        return HttpResponseRedirect(reverse("home"))
 
 def change_data(request):
     if request.method == "POST":
